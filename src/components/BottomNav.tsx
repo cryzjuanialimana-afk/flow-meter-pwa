@@ -1,5 +1,5 @@
 import { Link, useLocation } from "@tanstack/react-router";
-import { Home, LayoutGrid, Camera } from "lucide-react";
+import { Home, LayoutGrid, Camera, Shield } from "lucide-react";
 
 export function BottomNav() {
   const { pathname } = useLocation();
@@ -7,6 +7,7 @@ export function BottomNav() {
     { to: "/", label: "Inicio", icon: Home },
     { to: "/camara", label: "Lectura", icon: Camera },
     { to: "/admin", label: "Admin", icon: LayoutGrid },
+    { to: "/superadmin", label: "Super", icon: Shield },
   ] as const;
 
   return (
