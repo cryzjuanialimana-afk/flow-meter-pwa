@@ -4,9 +4,11 @@ import {
   Link,
   createRootRouteWithContext,
   useRouter,
+  useLocation,
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
+import { AnimatePresence, motion } from "framer-motion";
 
 import appCss from "../styles.css?url";
 
@@ -76,16 +78,44 @@ function RootShell({ children }: { children: React.ReactNode }) {
 
 import { BottomNav } from "@/components/BottomNav";
 
+const pageVariants = {
+  initial: { opacity: 0, x: 20, scale: 0.98 },
+  animate: { opacity: 1, x: 0, scale: 1 },
+  exit: { opacity: 0, x: -20, scale: 0.98 },
+};
+
+const pageTransition = {
+  type: "spring" as const,
+  stiffness: 280,
+  damping: 30,
+  mass: 0.8,
+};
+
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const location = useLocation();
+
   return (
     <QueryClientProvider client={queryClient}>
       <div className="min-h-screen bg-background flex flex-col">
-        <main className="flex-1 pb-24">
-          <Outlet />
+        <main className="flex-1 pb-24 overflow-hidden">
+          <AnimatePresence mode="wait" initial={false}>
+            <motion.div
+              key={location.pathname}
+              variants={pageVariants}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+              transition={pageTransition}
+              className="will-change-transform"
+            >
+              <Outlet />
+            </motion.div>
+          </AnimatePresence>
         </main>
         <BottomNav />
       </div>
     </QueryClientProvider>
   );
 }
+
